@@ -10,12 +10,32 @@ import {
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { useState } from "react";
+import parseInput from "@/utils/parseInput";
+import ItemCard from "./ItemCard";
+import useItems from "@/hooks/useItems";
+
+import type { ItemCount } from "@/hooks/useItems";
+
+export type parsedCount = {
+  item_id: string;
+  count: number;
+};
+
 function InputCard() {
   const [input, setInput] = useState("");
+  const { postItemCount, itemCount } = useItems() as {
+    postItemCount: (count: parsedCount[]) => Promise<any>;
+    itemCount: ItemCount[];
+  };
 
   const handleClick = (e: any) => {
     e.preventDefault();
-    console.log(input);
+    const count = parseInput(input);
+    // remove null rows
+    const validCount: parsedCount[] = count.filter((row) => row !== null);
+
+    if (!validCount.length) return;
+    postItemCount(validCount);
   };
 
   return (
@@ -27,9 +47,9 @@ function InputCard() {
           <Button>Download Template</Button>
         </CardAction>
       </CardHeader>
+
       <CardContent className="flex-1 flex flex-col">
-        {/* POST REQUEST SUBMIT */}
-        <form className="flex-1 flex flex-col">
+        <form className="flex-1 flex flex-col" onSubmit={handleClick}>
           <Textarea
             className="flex-1 resize-none"
             value={input}
@@ -37,7 +57,8 @@ function InputCard() {
           />
         </form>
       </CardContent>
-      <CardFooter>
+
+      <CardFooter className="flex flex-col gap-4">
         <Button type="submit" className="w-full" onClick={handleClick}>
           Submit
         </Button>

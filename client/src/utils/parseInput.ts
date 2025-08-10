@@ -1,9 +1,3 @@
-// const input = `
-// COR12345       3.5
-// COR12346\t2
-// COR12347    1
-// `.trim(); // Make sure to trim leading/trailing whitespace
-
 const parseInput = (input: string) => {
   const result = input
     .trim()
@@ -14,7 +8,7 @@ const parseInput = (input: string) => {
         const [, item_id, count] = match;
         return { item_id, count: parseFloat(count) };
       }
-      return null; // or throw an error if needed
+      return null; 
     })
     .filter(Boolean); // remove nulls
 

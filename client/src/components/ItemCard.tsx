@@ -11,34 +11,34 @@ import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { Minus, Plus, RotateCcw } from "lucide-react";
 
-function ItemCard() {
-  const [count, setCount] = useState(0);
+function ItemCard({ id, name }: { id: string; name: string }) {
+  const [increment, setIncrement] = useState(0);
 
   return (
-    <Card className="w-[25rem] h-auto">
+    <Card className="w-[25rem] h-auto" key={id}>
       <CardHeader>
         <CardTitle className="flex justify-between">
-          <h2 className="text-gray-500">COR12345</h2>
-          <Badge className="bg-green-500 rounded-full p-1 h-1"></Badge>
+          <h2 className="text-gray-500">{id}</h2>
+          <Badge className="bg-green-500 rounded-full p-1 h-1" />
         </CardTitle>
         <CardDescription className="flex gap-2">
-          <h2 className="text-3xl text-black flex-1">Box 591</h2>
+          <h2 className="text-3xl text-black flex-1">{name}</h2>
           <div className="inline-flex items-center border rounded-md overflow-hidden">
-            {/* Minus Button */}
+            {/* MINUS BUTTON */}
             <Button
-              onClick={() => setCount((prev) => prev - 1)}
+              onClick={() => setIncrement((prev) => prev - 1)}
               variant="outline"
               size="icon"
               className="rounded-none border-0">
               <Minus />
             </Button>
 
-            {/* Number Display */}
-            <span className="px-4 select-none">{count}</span>
+            {/* NUMBER DISPLAY */}
+            <span className="px-4 select-none">{increment}</span>
 
-            {/* Plus Button */}
+            {/* PLUS BUTTON */}
             <Button
-              onClick={() => setCount((prev) => prev + 1)}
+              onClick={() => setIncrement((prev) => prev + 1)}
               variant="outline"
               size="icon"
               className="rounded-none border-0">
@@ -47,15 +47,16 @@ function ItemCard() {
           </div>
           {/* RESET BUTTON */}
           <Button
-            disabled={count !== 0 ? false : true}
+            disabled={increment !== 0 ? false : true}
             size={"icon"}
             variant={"destructive"}
-            onClick={() => setCount(0)}>
+            onClick={() => setIncrement(0)}>
             <RotateCcw className="self-center w-6" />
           </Button>
         </CardDescription>
       </CardHeader>
       <Separator />
+      {/* METRICS */}
       <CardContent className="flex justify-between gap-4">
         <div>
           <h3 className="text-sm">DOH</h3>
@@ -72,7 +73,6 @@ function ItemCard() {
           <p className="font-bold text-2xl">12.0</p>
         </div>
       </CardContent>
-
     </Card>
   );
 }
