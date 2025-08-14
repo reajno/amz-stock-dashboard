@@ -1,8 +1,9 @@
 import { useState } from "react";
-
+import calculateMetrics from "@/utils/calculateMetrics";
 import type { parsedCount } from "@/components/InputCard";
+import type { MetricsResult } from "@/utils/calculateMetrics";
 
-export type ItemCount = {
+export type Item = {
   item_id: string;
   item_name: string;
   count: number;
@@ -11,9 +12,8 @@ export type ItemCount = {
 };
 
 function useItems() {
-  const [itemCount, setItemCount] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [itemCount, setItemCount] = useState<MetricsResult[]>([]);
+  const [siteVolume, setSiteVolume] = useState(20000);
 
   const postItemCount = async (count: parsedCount[]) => {
     try {
@@ -28,16 +28,21 @@ function useItems() {
       const data = await res.json();
       if (data.error) throw data.error;
 
-      setItemCount(data);
+      const countWithMetrics = data.map((row: Item) => {
+        return calculateMetrics(row, siteVolume);
+      });
 
-      return data;
+      localStorage.setItem("count", JSON.stringify(countWithMetrics));
+      localStorage.setItem("volume", siteVolume.toString());
     } catch (error: any) {
       console.log(error?.message);
     }
   };
+
   return {
     postItemCount,
     itemCount,
+    siteVolume,
   };
 }
 export default useItems;

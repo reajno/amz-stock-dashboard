@@ -11,10 +11,9 @@ import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { useState } from "react";
 import parseInput from "@/utils/parseInput";
-import ItemCard from "./ItemCard";
-import useItems from "@/hooks/useItems";
 
-import type { ItemCount } from "@/hooks/useItems";
+import { useNavigate } from "react-router";
+import useItems from "@/hooks/useItems";
 
 export type parsedCount = {
   item_id: string;
@@ -23,19 +22,17 @@ export type parsedCount = {
 
 function InputCard() {
   const [input, setInput] = useState("");
-  const { postItemCount, itemCount } = useItems() as {
-    postItemCount: (count: parsedCount[]) => Promise<any>;
-    itemCount: ItemCount[];
-  };
+  const { postItemCount } = useItems();
+  let navigate = useNavigate();
 
-  const handleClick = (e: any) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const count = parseInput(input);
-    // remove null rows
     const validCount: parsedCount[] = count.filter((row) => row !== null);
 
     if (!validCount.length) return;
     postItemCount(validCount);
+    navigate("/metrics");
   };
 
   return (
@@ -49,7 +46,10 @@ function InputCard() {
       </CardHeader>
 
       <CardContent className="flex-1 flex flex-col">
-        <form className="flex-1 flex flex-col" onSubmit={handleClick}>
+        <form
+          className="flex-1 flex flex-col"
+          onSubmit={handleSubmit}
+          id="countForm">
           <Textarea
             className="flex-1 resize-none"
             value={input}
@@ -57,9 +57,8 @@ function InputCard() {
           />
         </form>
       </CardContent>
-
       <CardFooter className="flex flex-col gap-4">
-        <Button type="submit" className="w-full" onClick={handleClick}>
+        <Button type="submit" form="countForm" className="w-full">
           Submit
         </Button>
       </CardFooter>

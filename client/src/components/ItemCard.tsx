@@ -11,34 +11,58 @@ import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { Minus, Plus, RotateCcw } from "lucide-react";
 
-function ItemCard({ id, name }: { id: string; name: string }) {
-  const [increment, setIncrement] = useState(0);
+type Props = {
+  metrics: {
+    item_id: string;
+    item_name: string;
+    count: number;
+    daysOnHand: number;
+    weekendCover: number;
+  };
+  onCountChange: (number: number) => void;
+};
+
+function ItemCard({ metrics, onCountChange }: Props) {
+  const [amountChange, setAmountChange] = useState(0);
+
+  const handleDecrement = () => {
+    onCountChange(-1);
+    setAmountChange((prev) => prev - 1);
+  };
+
+  const handleIncrement = () => {
+    onCountChange(1);
+    setAmountChange((prev) => prev + 1);
+  };
+
+  const handleReset = () => {
+    onCountChange(-amountChange);
+    setAmountChange(0);
+  };
 
   return (
-    <Card className="w-[25rem] h-auto" key={id}>
+    <Card className="w-full sm:max-w-sm h-auto" key={metrics.item_id}>
       <CardHeader>
         <CardTitle className="flex justify-between">
-          <h2 className="text-gray-500">{id}</h2>
+          <h2 className="text-gray-500 text-sm">{metrics.item_id}</h2>
           <Badge className="bg-green-500 rounded-full p-1 h-1" />
         </CardTitle>
-        <CardDescription className="flex gap-2">
-          <h2 className="text-3xl text-black flex-1">{name}</h2>
-          <div className="inline-flex items-center border rounded-md overflow-hidden">
+        <CardDescription className="flex flex-wrap gap-2 w-full">
+          <h2 className="text-3xl text-black flex-1">{metrics.item_name}</h2>
+          <div className="inline-flex items-center border rounded-md  flex-shrink-0">
             {/* MINUS BUTTON */}
             <Button
-              onClick={() => setIncrement((prev) => prev - 1)}
+              onClick={handleDecrement}
               variant="outline"
               size="icon"
               className="rounded-none border-0">
               <Minus />
             </Button>
-
             {/* NUMBER DISPLAY */}
-            <span className="px-4 select-none">{increment}</span>
-
+            <span className="px-4 select-none">{amountChange}</span>
             {/* PLUS BUTTON */}
             <Button
-              onClick={() => setIncrement((prev) => prev + 1)}
+              onClick={handleIncrement}
               variant="outline"
               size="icon"
               className="rounded-none border-0">
@@ -47,30 +71,29 @@ function ItemCard({ id, name }: { id: string; name: string }) {
           </div>
           {/* RESET BUTTON */}
           <Button
-            disabled={increment !== 0 ? false : true}
+            disabled={amountChange !== 0 ? false : true}
             size={"icon"}
             variant={"destructive"}
-            onClick={() => setIncrement(0)}>
+            onClick={handleReset}
+            className="flex-shrink-0">
             <RotateCcw className="self-center w-6" />
           </Button>
         </CardDescription>
       </CardHeader>
       <Separator />
       {/* METRICS */}
-      <CardContent className="flex justify-between gap-4">
+      <CardContent className="grid grid-cols-3 justify-between gap-2">
+        <div>
+          <h3 className="text-sm">Count</h3>
+          <p className="font-bold text-2xl">{metrics.count}</p>
+        </div>
         <div>
           <h3 className="text-sm">DOH</h3>
-          <p className="font-bold text-2xl">12.0</p>
+          <p className="font-bold text-2xl">{metrics.daysOnHand}</p>
         </div>
-        <Separator orientation="vertical" />
         <div>
           <h3 className="text-sm">Weekend Cover</h3>
-          <p className="font-bold text-2xl">12.0</p>
-        </div>
-        <Separator orientation="vertical" />
-        <div>
-          <h3 className="text-sm">Available Space</h3>
-          <p className="font-bold text-2xl">12.0</p>
+          <p className="font-bold text-2xl">{metrics.weekendCover}</p>
         </div>
       </CardContent>
     </Card>
