@@ -20,19 +20,21 @@ function Metrics() {
   };
 
   return (
-    <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4 justify-items-center max-w-full overflow-x-hidden">
-      {itemCounts.map((item) => {
-        const metrics = calculateMetrics(item, volume);
+    <div className="flex justify-center">
+      <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 justify-items-center max-w-[70rem] overflow-x-hidden">
+        {itemCounts.map((item) => {
+          const metrics = calculateMetrics(item, volume);
 
-        return (
-          <ItemCard
-            key={item.item_id}
-            metrics={metrics}
-            onCountChange={(number: number) =>
-              handleCountChange(item.item_id, number)
-            }></ItemCard>
-        );
-      })}
+          return (
+            <ItemCard
+              key={item.item_id}
+              metrics={metrics}
+              onCountChange={(number: number) =>
+                handleCountChange(item.item_id, number)
+              }></ItemCard>
+          );
+        })}
+      </div>
     </div>
   );
 }
