@@ -1,12 +1,4 @@
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import { useState } from "react";
@@ -37,14 +29,6 @@ function InputCard() {
 
   return (
     <Card className="w-md h-[25rem] justify-between shadow-xl">
-      <CardHeader>
-        <CardTitle>BNE1 Pallet Counter</CardTitle>
-        <CardDescription>Copy and paste cycle count below</CardDescription>
-        <CardAction>
-          <Button>Download Template</Button>
-        </CardAction>
-      </CardHeader>
-
       <CardContent className="flex-1 flex flex-col">
         <form
           className="flex-1 flex flex-col"
@@ -52,13 +36,15 @@ function InputCard() {
           id="countForm">
           <Textarea
             className="flex-1 resize-none"
+            placeholder="Copy and paste cycle count here"
             value={input}
             onChange={(e) => setInput(e.target.value)}
           />
         </form>
       </CardContent>
-      <CardFooter className="flex flex-col gap-4">
-        <Button type="submit" form="countForm" className="w-full">
+      <CardFooter className="flex gap-4 ">
+        <Button variant={"outline"}>Download Template</Button>
+        <Button type="submit" form="countForm" className="flex-1 bg-green-500">
           Submit
         </Button>
       </CardFooter>

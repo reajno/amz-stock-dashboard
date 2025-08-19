@@ -41,43 +41,45 @@ function ItemCard({ metrics, onCountChange }: Props) {
   };
 
   return (
-    <Card className="w-full sm:max-w-sm h-auto" key={metrics.item_id}>
+    <Card className="md:w-max" key={metrics.item_id}>
       <CardHeader>
         <CardTitle className="flex justify-between">
           <h2 className="text-gray-500 text-sm">{metrics.item_id}</h2>
           <Badge className="bg-green-500 rounded-full p-1 h-1" />
         </CardTitle>
-        <CardDescription className="flex flex-wrap gap-2 w-full">
+        <CardDescription className="flex gap-2 ">
           <h2 className="text-3xl text-black flex-1">{metrics.item_name}</h2>
-          <div className="inline-flex items-center border rounded-md  flex-shrink-0">
-            {/* MINUS BUTTON */}
+          <div className="inline-flex items-center flex-wrap gap-2">
+            <div className=" border rounded-md">
+              {/* MINUS BUTTON */}
+              <Button
+                onClick={handleDecrement}
+                variant="outline"
+                size="icon"
+                className="rounded-none border-0">
+                <Minus />
+              </Button>
+              {/* NUMBER DISPLAY */}
+              <span className="px-4 select-none">{amountChange}</span>
+              {/* PLUS BUTTON */}
+              <Button
+                onClick={handleIncrement}
+                variant="outline"
+                size="icon"
+                className="rounded-none border-0">
+                <Plus />
+              </Button>
+            </div>
+            {/* RESET BUTTON */}
             <Button
-              onClick={handleDecrement}
-              variant="outline"
-              size="icon"
-              className="rounded-none border-0">
-              <Minus />
-            </Button>
-            {/* NUMBER DISPLAY */}
-            <span className="px-4 select-none">{amountChange}</span>
-            {/* PLUS BUTTON */}
-            <Button
-              onClick={handleIncrement}
-              variant="outline"
-              size="icon"
-              className="rounded-none border-0">
-              <Plus />
+              disabled={amountChange !== 0 ? false : true}
+              size={"icon"}
+              variant={"destructive"}
+              onClick={handleReset}
+              className="flex-shrink-0">
+              <RotateCcw className="self-center w-6" />
             </Button>
           </div>
-          {/* RESET BUTTON */}
-          <Button
-            disabled={amountChange !== 0 ? false : true}
-            size={"icon"}
-            variant={"destructive"}
-            onClick={handleReset}
-            className="flex-shrink-0">
-            <RotateCcw className="self-center w-6" />
-          </Button>
         </CardDescription>
       </CardHeader>
       <Separator />

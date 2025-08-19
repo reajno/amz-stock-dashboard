@@ -21,7 +21,7 @@ function Metrics() {
 
   return (
     <div className="flex justify-center">
-      <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 justify-items-center max-w-[70rem] overflow-x-hidden">
+      <div className="p-4 grid grid-cols-1 md:grid-cols-2 place-items-center xl:grid-cols-3 gap-4 md:gap-6">
         {itemCounts.map((item) => {
           const metrics = calculateMetrics(item, volume);
 
