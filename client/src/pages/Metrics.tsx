@@ -2,14 +2,21 @@ import ItemCard from "@/components/ItemCard";
 import { useState } from "react";
 import type { Item } from "@/hooks/useItems";
 import calculateMetrics from "@/utils/calculateMetrics";
+import FloatBtn from "@/components/FloatBtn";
 
 const storedCount = localStorage.getItem("count");
 const storedVolume = localStorage.getItem("volume");
 const count = JSON.parse(storedCount ?? "[]");
 const volume = Number(storedVolume);
 
+export type Order = {
+  item_id: string;
+  order: number;
+};
+
 function Metrics() {
   const [itemCounts, setItemCounts] = useState<Item[]>(count);
+  const [order, setOrder] = useState<Order[]>([]);
 
   const handleCountChange = (itemId: string, number: number) => {
     setItemCounts((prev) =>
@@ -17,6 +24,18 @@ function Metrics() {
         item.item_id === itemId ? { ...item, count: item.count + number } : item
       )
     );
+    setOrder((prev) => {
+      const exists = prev.some((item) => item.item_id === itemId);
+
+      if (exists) {
+        return prev.map((item) =>
+          item.item_id === itemId
+            ? { ...item, order: item.order + number }
+            : item
+        );
+      }
+      return [...prev, { item_id: itemId, order: number }];
+    });
   };
 
   return (
@@ -35,6 +54,7 @@ function Metrics() {
           );
         })}
       </div>
+      <FloatBtn order={order} />
     </div>
   );
 }
