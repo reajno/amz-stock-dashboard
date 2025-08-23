@@ -15,7 +15,7 @@ function useItems() {
 
   const postItemCount = async (count: parsedCount[]) => {
     try {
-      const res = await fetch("http://localhost:3001/items", {
+      const res = await fetch("https://amz-stock-dashboard-9jlu.vercel.app/items", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
