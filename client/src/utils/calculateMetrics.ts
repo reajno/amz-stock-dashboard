@@ -31,11 +31,3 @@ const calculateMetrics = (object: Item, siteVolume: number) => {
 };
 
 export default calculateMetrics;
-
-// {
-//   "item_id": "COR95251",
-//   "item_name": "Box 268",
-//   "eaches": 150,
-//   "percent_use": 0.0144,
-//   "count": 6
-// }

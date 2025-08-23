@@ -1,7 +1,6 @@
 import { useState } from "react";
 import calculateMetrics from "@/utils/calculateMetrics";
 import type { parsedCount } from "@/components/InputCard";
-import type { MetricsResult } from "@/utils/calculateMetrics";
 
 export type Item = {
   item_id: string;
@@ -12,8 +11,7 @@ export type Item = {
 };
 
 function useItems() {
-  const [itemCount, setItemCount] = useState<MetricsResult[]>([]);
-  const [siteVolume, setSiteVolume] = useState(20000);
+  const [siteVolume] = useState(20000);
 
   const postItemCount = async (count: parsedCount[]) => {
     try {
@@ -41,7 +39,6 @@ function useItems() {
 
   return {
     postItemCount,
-    itemCount,
     siteVolume,
   };
 }
