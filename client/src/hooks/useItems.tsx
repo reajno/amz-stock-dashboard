@@ -12,17 +12,22 @@ export type Item = {
 
 function useItems() {
   const [siteVolume] = useState(20000);
+  const [loading, setLoading] = useState(false);
 
   const postItemCount = async (count: parsedCount[]) => {
+    setLoading(true);
     try {
-      const res = await fetch("https://amz-stock-dashboard-9jlu.vercel.app/items", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(count),
-      });
+      const res = await fetch(
+        "https://amz-stock-dashboard-9jlu.vercel.app/items",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify(count),
+        }
+      );
       const data = await res.json();
       if (data.error) throw data.error;
 
@@ -32,14 +37,19 @@ function useItems() {
 
       localStorage.setItem("count", JSON.stringify(countWithMetrics));
       localStorage.setItem("volume", siteVolume.toString());
+      return true;
     } catch (error: any) {
       console.log(error?.message);
+      return false;
+    } finally {
+      setLoading(false);
     }
   };
 
   return {
     postItemCount,
     siteVolume,
+    loading,
   };
 }
 export default useItems;

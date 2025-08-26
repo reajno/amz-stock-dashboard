@@ -14,17 +14,20 @@ export type parsedCount = {
 
 function InputCard() {
   const [input, setInput] = useState("");
-  const { postItemCount } = useItems();
+  const { postItemCount, loading } = useItems();
   let navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const count = parseInput(input);
     const validCount: parsedCount[] = count.filter((row) => row !== null);
 
     if (!validCount.length) return;
-    postItemCount(validCount);
-    navigate("/metrics");
+    const isStored = await postItemCount(validCount);
+
+    if (!loading && isStored) {
+      navigate("/metrics");
+    }
   };
 
   return (
@@ -44,7 +47,11 @@ function InputCard() {
       </CardContent>
       <CardFooter className="flex gap-4 ">
         <Button variant={"outline"}>Download Template</Button>
-        <Button type="submit" form="countForm" className="flex-1 bg-green-500">
+        <Button
+          disabled={!input || loading ? true : false}
+          type="submit"
+          form="countForm"
+          className="flex-1 bg-green-500">
           Submit
         </Button>
       </CardFooter>
