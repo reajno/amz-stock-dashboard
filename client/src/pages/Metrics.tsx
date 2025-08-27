@@ -1,12 +1,10 @@
 import ItemCard from "@/components/ItemCard";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Item } from "@/hooks/useItems";
 import calculateMetrics from "@/utils/calculateMetrics";
 import FloatBtn from "@/components/FloatBtn";
 
-const storedCount = localStorage.getItem("count");
 const storedVolume = localStorage.getItem("volume");
-const count = JSON.parse(storedCount ?? "[]");
 const volume = Number(storedVolume);
 
 export type Order = {
@@ -15,8 +13,21 @@ export type Order = {
 };
 
 function Metrics() {
-  const [itemCounts, setItemCounts] = useState<Item[]>(count);
+  const [itemCounts, setItemCounts] = useState<Item[]>([]);
   const [order, setOrder] = useState<Order[]>([]);
+
+  // Load from localStorage on mount
+  useEffect(() => {
+    const storedCount = localStorage.getItem("count");
+    if (storedCount) setItemCounts(JSON.parse(storedCount));
+  }, []);
+
+  // Sync itemCounts with localStorage whenever it changes
+  useEffect(() => {
+    if (itemCounts.length > 0) {
+      localStorage.setItem("count", JSON.stringify(itemCounts));
+    }
+  }, [itemCounts]);
 
   const handleCountChange = (itemId: string, number: number) => {
     setItemCounts((prev) =>
