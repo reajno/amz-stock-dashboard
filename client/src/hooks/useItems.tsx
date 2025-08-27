@@ -1,7 +1,6 @@
 import { useState } from "react";
 import calculateMetrics from "@/utils/calculateMetrics";
 import type { parsedCount } from "@/components/InputCard";
-import parseInput from "@/utils/parseInput";
 
 export type Item = {
   item_id: string;
