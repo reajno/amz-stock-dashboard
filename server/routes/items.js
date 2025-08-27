@@ -19,10 +19,11 @@ items.get("/", (req, res) => {
 
 items.post("/", (req, res) => {
   const input = req.body;
-  const itemIds = input.map((it) => it.item_id);
-
+  const itemIds = input.map((item) => item.item_id);
   try {
-    if (!itemIds.length) return res.status(400).json({ message: "No items" });
+    if (!itemIds.length) {
+      return res.status(400).json({ error: { message: "No items found" } });
+    }
 
     const placeholders = itemIds.map(() => "?").join(", ");
 
@@ -30,15 +31,17 @@ items.post("/", (req, res) => {
       .prepare(`SELECT * FROM items WHERE item_id IN (${placeholders})`)
       .all(...itemIds);
 
+    if (!rows.length) {
+      return res.status(400).json({ error: { message: "No items found" } });
+    }
     // Merge counts by item_id
     const countsMap = Object.fromEntries(
-      input.map((it) => [it.item_id, Number(it.count)])
+      input.map((item) => [item.item_id, Number(item.count)])
     );
-    const merged = rows.map((r) => ({
-      ...r,
-      count: countsMap[r.item_id] ?? null,
+    const merged = rows.map((row) => ({
+      ...row,
+      count: countsMap[row.item_id] ?? null,
     }));
-
     res.json(merged);
   } catch (error) {
     res.status(400).json({ error: { message: error.message } });
