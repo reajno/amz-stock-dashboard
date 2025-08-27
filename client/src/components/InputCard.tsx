@@ -19,11 +19,12 @@ function InputCard() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const count = parseInput(input);
-    const validCount: parsedCount[] = count.filter((row) => row !== null);
+    // Format input string to array
+    const inputArr = parseInput(input);
+    // Remove null rows
+    const cleanArr: parsedCount[] = inputArr.filter((row) => row !== null);
 
-    if (!validCount.length) return;
-    const isStored = await postItemCount(validCount);
+    const isStored = await postItemCount(cleanArr);
 
     if (!loading && isStored) {
       navigate("/metrics");
