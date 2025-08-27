@@ -1,6 +1,7 @@
 import { useState } from "react";
 import calculateMetrics from "@/utils/calculateMetrics";
 import type { parsedCount } from "@/components/InputCard";
+import parseInput from "@/utils/parseInput";
 
 export type Item = {
   item_id: string;
@@ -13,9 +14,12 @@ export type Item = {
 function useItems() {
   const [siteVolume] = useState(20000);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
 
   const postItemCount = async (count: parsedCount[]) => {
+    localStorage.removeItem("count");
     setLoading(true);
+    setError(null);
     try {
       const res = await fetch(
         "https://amz-stock-dashboard-9jlu.vercel.app/items",
@@ -29,6 +33,7 @@ function useItems() {
         }
       );
       const data = await res.json();
+
       if (data.error) throw data.error;
 
       const countWithMetrics = data.map((row: Item) => {
@@ -38,8 +43,14 @@ function useItems() {
       localStorage.setItem("count", JSON.stringify(countWithMetrics));
       localStorage.setItem("volume", siteVolume.toString());
       return true;
-    } catch (error: any) {
-      console.log(error?.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error);
+        console.error(error.message);
+      } else {
+        setError(new Error("Unexpected error"));
+        console.error("Unexpected error", error);
+      }
       return false;
     } finally {
       setLoading(false);
@@ -50,6 +61,7 @@ function useItems() {
     postItemCount,
     siteVolume,
     loading,
+    error,
   };
 }
 export default useItems;
